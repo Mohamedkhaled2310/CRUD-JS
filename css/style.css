@@ -1,0 +1,11 @@
+
+.btn-add{
+    background-color: green !important;
+}
+.btn-delete{
+    background-color: red !important;
+}
+.btn-update{
+    background-color: rgb(51, 51, 173) !important;
+}
+
