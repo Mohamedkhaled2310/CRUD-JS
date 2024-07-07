@@ -61,6 +61,19 @@ var productForm = document.getElementById("product-form");
 
 //add data
 createBtn.onclick = function() {
+  if (!productName.value.trim() || !productCat.value.trim() || !productPrice.value.trim() || !productDesc.value.trim()) {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Please fill in all fields.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
+    return;
+  }
+
   if (!products) {
     products = [];
   }
@@ -91,17 +104,28 @@ function reset(){
 }
 // delete product
 function deleteProduct(id){
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been deleted.",
+        icon: "success"
+      });
     products.splice(id,1);
     handelDataShow();
-    Swal.fire({
-      title: 'Product Deleted!',
-      text: 'Your product has been deleted successfully.',
-      icon: 'success',
-      confirmButtonText: 'OK',
-      customClass: {
-          confirmButton: 'btn-delete'
-      }
+  
+    }
   });
+
+    
 }
 //edit product
 function editProduct(id){
@@ -115,6 +139,19 @@ function editProduct(id){
   createBtn.innerHTML ="Update Product";
 
   createBtn.onclick = function(){
+
+    if (!productName.value.trim() || !productCat.value.trim() || !productPrice.value.trim() || !productDesc.value.trim()) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill in all fields.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+      return;
+    }
 
   products[id].name =  productName.value; 
   products[id].cat =  productCat.value;
