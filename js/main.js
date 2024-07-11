@@ -1,4 +1,4 @@
-var products = null;
+var products = JSON.parse(localStorage.getItem("products"));
 var productsContainer = document.getElementById("product-tabel-container");
 var warningMessage = document.getElementById("warning-msg");
 var tabelBody = document.getElementById("tabel-body");
@@ -103,6 +103,7 @@ createBtn.onclick = function () {
   };
 
   products.push(product);
+  localStorage.setItem("products",JSON.stringify(products));
   handelDataShow();
   Swal.fire({
     title: 'Product Added!',
@@ -175,6 +176,7 @@ function editProduct(id) {
     products[id].dec = productDesc.value;
     createBtn.innerHTML = "Add Product";
     reset();
+    localStorage.setItem("products",JSON.stringify(products));
     handelDataShow();
     Swal.fire({
       title: 'Product Updated!',
@@ -195,7 +197,7 @@ searchBtn.addEventListener("keyup", function (event) {
   tabelBody.innerHTML = "";
   var isFound = false;
   
-  // Remove the "not found" message if it exists
+
   var notFoundElement = document.getElementById('not-found');
   if (notFoundElement) {
     notFoundElement.remove();
