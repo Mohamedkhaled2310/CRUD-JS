@@ -266,7 +266,6 @@ const admin = new Admin(products);
 admin.handelDataShow();
 
 
-
 //onclick to add data
 createBtn.onclick = function () {
      if (!productName.value.trim() || !productCat.value.trim() || !productPrice.value.trim() || !productDesc.value.trim()) {
@@ -290,3 +289,36 @@ searchBtn.addEventListener("keyup", function (event) {
   admin.search(searchBtn.value);
 });
 
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  let animatedTitle = document.querySelector("#animatedTitle");
+
+  const text = "CRUD";
+  const speed = 300; 
+  const delay = 850; 
+  let i = 0;
+
+  function typeWriter() {
+      if (i < text.length) {
+          animatedTitle.children[i].style.visibility = "visible";
+          i++;
+          setTimeout(typeWriter, speed);
+      } else {
+          setTimeout(() => {
+            Array.from(animatedTitle.children).forEach(span =>{
+              span.style.visibility = "hidden";
+             });
+              i = 0;
+              setTimeout(typeWriter, speed);
+          }, delay);
+      }
+  }
+
+  Array.from(animatedTitle.children).forEach(span =>{
+    span.style.visibility = "hidden";
+   });
+
+
+  typeWriter();
+});
