@@ -1,5 +1,5 @@
 ## Demo
-[Click here to see the demo]([https://example.com/demo](https://mohamedkhaled2310.github.io/CRUD-JS/)
+[Click here to see the demo]((https://mohamedkhaled2310.github.io/CRUD-JS/)
 
 
 # CRUD-JS
