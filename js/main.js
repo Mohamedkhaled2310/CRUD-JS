@@ -1,73 +1,8 @@
-var products = JSON.parse(localStorage.getItem("products"));
+var products = JSON.parse(localStorage.getItem('products'))
 var productsContainer = document.getElementById("product-tabel-container");
 var warningMessage = document.getElementById("warning-msg");
 var tabelBody = document.getElementById("tabel-body");
 var isFound = false;
-
-function handelDataShow() {
-  if (products && products.length !== 0) {
-    console.log("tableOpened");
-    console.log(products);
-    productsContainer.classList.replace("d-none", "d-block");
-    warningMessage.classList.replace("d-block", "d-none");
-
-    tabelBody.innerHTML = '';
-
-    for (var i = 0; i < products.length; i++) {
-      var row = document.createElement('tr');
-
-      var cellIndex = document.createElement('th');
-      cellIndex.textContent = i + 1;
-      row.appendChild(cellIndex);
-
-      var cellName = document.createElement('td');
-      cellName.textContent = products[i].name;
-      row.appendChild(cellName);
-
-      var cellCat = document.createElement('td');
-      cellCat.textContent = products[i].cat;
-      row.appendChild(cellCat);
-
-      var cellPrice = document.createElement('td');
-      cellPrice.textContent = products[i].price;
-      row.appendChild(cellPrice);
-
-      var cellDec = document.createElement('td');
-      cellDec.textContent = products[i].dec;
-      row.appendChild(cellDec);
-
-      var cellEdit = document.createElement('td');
-      var editButton = document.createElement('button');
-      editButton.classList.add('btn', 'btn-outline-success');
-      editButton.onclick = (function(index) {
-        return function() {
-          editProduct(index);
-        };
-      })(i);
-      editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-      cellEdit.appendChild(editButton);
-      row.appendChild(cellEdit);
-
-      var cellDelete = document.createElement('td');
-      var deleteButton = document.createElement('button');
-      deleteButton.classList.add('btn', 'btn-outline-danger');
-      deleteButton.onclick = (function(index) {
-        return function() {
-          deleteProduct(index);
-        };
-      })(i);
-      deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
-      cellDelete.appendChild(deleteButton);
-      row.appendChild(cellDelete);
-
-      tabelBody.appendChild(row);
-    }
-  } else {
-    warningMessage.classList.replace("d-none", "d-block");
-    productsContainer.classList.replace("d-block", "d-none");
-  }
-}
-handelDataShow();
 
 var productName = document.getElementById("product_name");
 var productCat = document.getElementById("product_category");
@@ -76,78 +11,137 @@ var productDesc = document.getElementById("prodct_desc");
 var createBtn = document.getElementById("create-btn");
 var resetBtn = document.getElementById("reset-btn");
 var productForm = document.getElementById("product-form");
+let searchBtn = document.getElementById("search");
 
-//add data
-createBtn.onclick = function () {
-  if (!productName.value.trim() || !productCat.value.trim() || !productPrice.value.trim() || !productDesc.value.trim()) {
+
+class Product{
+  constructor(name,cat,price,dec){
+    this.name = name;
+    this.cat =cat;
+    this.price = price;
+    this.dec = dec;
+  }
+}
+
+
+class Admin{
+  constructor(){
+    this.products =products;
+  }
+  
+   handelDataShow() {
+    console.log(this);
+    if (this.products && this.products.length !== 0) {
+      console.log("tableOpened");
+      productsContainer.classList.replace("d-none", "d-block");
+      warningMessage.classList.replace("d-block", "d-none");
+  
+      tabelBody.innerHTML = '';
+  
+      for (var i = 0; i < this.products.length; i++) {
+        var row = document.createElement('tr');
+  
+        var cellIndex = document.createElement('th');
+        cellIndex.textContent = i + 1;
+        row.appendChild(cellIndex);
+  
+        var cellName = document.createElement('td');
+        cellName.textContent = this.products[i].name;
+        row.appendChild(cellName);
+  
+        var cellCat = document.createElement('td');
+        cellCat.textContent = this.products[i].cat;
+        row.appendChild(cellCat);
+  
+        var cellPrice = document.createElement('td');
+        cellPrice.textContent = this.products[i].price;
+        row.appendChild(cellPrice);
+  
+        var cellDec = document.createElement('td');
+        cellDec.textContent = this.products[i].dec;
+        row.appendChild(cellDec);
+  
+        var cellEdit = document.createElement('td');
+        var editButton = document.createElement('button');
+        editButton.classList.add('btn', 'btn-outline-success');
+        editButton.onclick = (function(index) {
+          return function() {
+            admin.editProduct(index);
+          };
+        })(i);
+        editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+        cellEdit.appendChild(editButton);
+        row.appendChild(cellEdit);
+  
+        var cellDelete = document.createElement('td');
+        var deleteButton = document.createElement('button');
+        deleteButton.classList.add('btn', 'btn-outline-danger');
+        deleteButton.onclick = (function(index) {
+          return function() {
+            admin.deleteProduct(index);
+          };
+        })(i);
+        deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+        cellDelete.appendChild(deleteButton);
+        row.appendChild(cellDelete);
+  
+        tabelBody.appendChild(row);
+      }
+    } else {
+      warningMessage.classList.replace("d-none", "d-block");
+      productsContainer.classList.replace("d-block", "d-none");
+    }
+  }
+
+  addProduct(product){
+ 
+    if (!this.products) {
+      this.products = [];
+    }
+ 
+    this.products.push(product);
+    localStorage.setItem("products",JSON.stringify(this.products));
+    this.handelDataShow();
     Swal.fire({
-      title: 'Error!',
-      text: 'Please fill in all fields.',
-      icon: 'error',
+      title: 'Product Added!',
+      text: 'Your product has been added successfully.',
+      icon: 'success',
       confirmButtonText: 'OK',
       customClass: {
-        confirmButton: 'btn btn-danger'
+        confirmButton: 'btn-add'
       }
     });
-    return;
+  
   }
 
-  if (!products) {
-    products = [];
+  // delete product
+  deleteProduct(id) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+        this.products.splice(id, 1);
+        localStorage.setItem("products",JSON.stringify(this.products));
+        this.handelDataShow();
+        
+      }
+    });
   }
-  var product = {
-    name: productName.value,
-    cat: productCat.value,
-    price: productPrice.value,
-    dec: productDesc.value,
-  };
 
-  products.push(product);
-  localStorage.setItem("products",JSON.stringify(products));
-  handelDataShow();
-  Swal.fire({
-    title: 'Product Added!',
-    text: 'Your product has been added successfully.',
-    icon: 'success',
-    confirmButtonText: 'OK',
-    customClass: {
-      confirmButton: 'btn-add'
-    }
-  });
-
-};
-
-// set inputs empty
-function reset() {
-  productForm.reset();
-}
-
-// delete product
-function deleteProduct(id) {
-  Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire({
-        title: "Deleted!",
-        text: "Your file has been deleted.",
-        icon: "success"
-      });
-      products.splice(id, 1);
-      handelDataShow();
-    }
-  });
-}
-
-//edit product
-function editProduct(id) {
-  var product = products[id];
+  //edit product
+ editProduct(id) {
+  let product = this.products[id];
 
   productName.value = product.name;
   productCat.value = product.cat;
@@ -170,14 +164,14 @@ function editProduct(id) {
       return;
     }
 
-    products[id].name = productName.value;
-    products[id].cat = productCat.value;
-    products[id].price = productPrice.value;
-    products[id].dec = productDesc.value;
+    admin.products[id].name = productName.value;
+    admin.products[id].cat = productCat.value;
+    admin.products[id].price = productPrice.value;
+    admin.products[id].dec = productDesc.value;
     createBtn.innerHTML = "Add Product";
-    reset();
-    localStorage.setItem("products",JSON.stringify(products));
-    handelDataShow();
+    productForm.reset();
+    localStorage.setItem("products",JSON.stringify(admin.products));
+    admin.handelDataShow();
     Swal.fire({
       title: 'Product Updated!',
       text: 'Your product has been updated successfully.',
@@ -190,10 +184,8 @@ function editProduct(id) {
   }
 }
 
-var searchBtn = document.querySelector("#search");
-
-searchBtn.addEventListener("keyup", function (event) {
-  var value = searchBtn.value;
+ search(searchValue){
+  var value =searchValue;
   tabelBody.innerHTML = "";
   var isFound = false;
   
@@ -203,8 +195,8 @@ searchBtn.addEventListener("keyup", function (event) {
     notFoundElement.remove();
   }
   
-  for (var i = 0; i < products.length; i++) {
-    if (products[i].name.includes(value)) {
+  for (var i = 0; i < this.products.length; i++) {
+    if (this.products[i].name.includes(value)) {
       var row = document.createElement('tr');
 
       var cellIndex = document.createElement('th');
@@ -212,19 +204,19 @@ searchBtn.addEventListener("keyup", function (event) {
       row.appendChild(cellIndex);
 
       var cellName = document.createElement('td');
-      cellName.textContent = products[i].name;
+      cellName.textContent = this.products[i].name;
       row.appendChild(cellName);
 
       var cellCat = document.createElement('td');
-      cellCat.textContent = products[i].cat;
+      cellCat.textContent = this.products[i].cat;
       row.appendChild(cellCat);
 
       var cellPrice = document.createElement('td');
-      cellPrice.textContent = products[i].price;
+      cellPrice.textContent = this.products[i].price;
       row.appendChild(cellPrice);
 
       var cellDec = document.createElement('td');
-      cellDec.textContent = products[i].dec;
+      cellDec.textContent = this.products[i].dec;
       row.appendChild(cellDec);
 
       var cellEdit = document.createElement('td');
@@ -232,7 +224,7 @@ searchBtn.addEventListener("keyup", function (event) {
       editButton.classList.add('btn', 'btn-outline-success');
       editButton.onclick = (function (index) {
         return function () {
-          editProduct(index);
+          admin.editProduct(index);
         };
       })(i);
       editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
@@ -244,7 +236,7 @@ searchBtn.addEventListener("keyup", function (event) {
       deleteButton.classList.add('btn', 'btn-outline-danger');
       deleteButton.onclick = (function (index) {
         return function () {
-          deleteProduct(index);
+          admin.deleteProduct(index);
         };
       })(i);
       deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
@@ -265,4 +257,36 @@ searchBtn.addEventListener("keyup", function (event) {
     notFound.classList.add('text-center', 'text-secondary');
     productsContainer.appendChild(notFound);
   }
+ }
+
+}
+
+
+const admin = new Admin(products);
+admin.handelDataShow();
+
+
+
+//onclick to add data
+createBtn.onclick = function () {
+     if (!productName.value.trim() || !productCat.value.trim() || !productPrice.value.trim() || !productDesc.value.trim()) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please fill in all fields.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+      return;
+    }else{
+    const product = new Product(productName.value,productCat.value,productPrice.value,productDesc.value);
+    admin.addProduct(product);
+}
+};
+
+searchBtn.addEventListener("keyup", function (event) {
+  admin.search(searchBtn.value);
 });
+
