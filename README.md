@@ -1,3 +1,7 @@
+## Demo
+[Click here to see the demo]([https://example.com/demo](https://mohamedkhaled2310.github.io/CRUD-JS/)
+
+
 # CRUD-JS
 
 This project demonstrates a simple CRUD (Create, Read, Update, Delete) application using vanilla JavaScript.
